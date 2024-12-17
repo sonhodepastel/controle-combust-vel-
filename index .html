@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio Nato Pizza</title>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+        }
+        main {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2, h3 {
+            margin: 0.5rem 0;
+        }
+        .menu, .cart {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 1rem 0;
+            padding: 1rem;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 0.5rem 0;
+        }
+        .item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .pix-section {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .pix-section button {
+            background-color: #007bff;
+        }
+        .pix-section button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos para impressão */
+        @media print {
+            body {
+                text-align: center;
+                font-family: Arial, sans-serif;
+            }
+            #print-content {
+                margin: 0 auto;
+                text-align: center;
+                width: 80%;
+            }
+            header, button, input, select, .pix-section {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NATO PIZZA DELIVERY</h1>
+        <p>Escolha seus produtos favoritos!</p>
+    </header>
+
+    <main>
+        <!-- Menu -->
+        <section class="menu">
+            <h2>Cardápio</h2>
+            <div class="item" data-name="Pizza Simples" data-price="24.90">
+                <img src="https://via.placeholder.com/80" alt="Pizza Simples">
+                <h3>Pizza Simples</h3>
+                <p>R$ 24,90</p>
+                <button onclick="addToCart('Pizza Simples', 24.90)">Adicionar</button>
+            </div>
+            <div class="item" data-name="Calzone Frango" data-price="11.90">
+                <img src="https://via.placeholder.com/80" alt="Calzone Frango">
+                <h3>Calzone de Frango</h3>
+                <p>R$ 11,90</p>
+                <button onclick="addToCart('Calzone de Frango', 11.90)">Adicionar</button>
+            </div>
+            <div class="item" data-name="Calzone Chocolate" data-price="14.90">
+                <img src="https://via.placeholder.com/80" alt="Calzone Chocolate">
+                <h3>Calzone de Chocolate</h3>
+                <p>R$ 14,90</p>
+                <button onclick="addToCart('Calzone de Chocolate', 14.90)">Adicionar</button>
+            </div>
+        </section>
+
+        <!-- Sacola -->
+        <section class="cart">
+            <h2>Sacola</h2>
+            <ul id="cart-items"></ul>
+            <p>Total: R$ <span id="total">0.00</span></p>
+
+            <h3>Dados do Cliente</h3>
+            <input type="text" id="client-name" placeholder="Seu Nome" required>
+            <input type="text" id="client-address" placeholder="Endereço" required>
+            <input type="tel" id="client-phone" placeholder="Telefone" required>
+            <select id="payment-method" onchange="togglePixSection()">
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Pix">Pix</option>
+            </select>
+
+            <!-- Seção para PIX -->
+            <div class="pix-section" id="pix-section">
+                <p>Chave PIX: <strong>071.315.084-03</strong></p>
+                <button onclick="copyPixKey()">Copiar Chave PIX</button>
+            </div>
+
+            <button onclick="printOrder()">Imprimir Pedido</button>
+            <button onclick="sendWhatsApp()">Enviar para WhatsApp</button>
+        </section>
+    </main>
+
+    <script>
+        let cart = [];
+        let total = 0;
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            total += price;
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const totalDisplay = document.getElementById('total');
+            cartItems.innerHTML = "";
+            cart.forEach((item, index) => {
+                cartItems.innerHTML += `
+                    <li>${item.name} - R$ ${item.price.toFixed(2)}
+                    <button onclick="removeItem(${index})">Remover</button></li>
+                `;
+            });
+            totalDisplay.textContent = total.toFixed(2);
+        }
+
+        function removeItem(index) {
+            total -= cart[index].price;
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function togglePixSection() {
+            const paymentMethod = document.getElementById('payment-method').value;
+            const pixSection = document.getElementById('pix-section');
+            pixSection.style.display = paymentMethod === 'Pix' ? 'block' : 'none';
+        }
+
+        function copyPixKey() {
+            const pixKey = "071.315.084-03";
+            navigator.clipboard.writeText(pixKey).then(() => alert("Chave PIX copiada: " + pixKey));
+        }
+
+        function printOrder() {
+            const printContent = `
+                <h2>Pedido NATO PIZZA</h2>
+                <p><strong>Cliente:</strong> ${document.getElementById('client-name').value}</p>
+                <p><strong>Endereço:</strong> ${document.getElementById('client-address').value}</p>
+                <p><strong>Telefone:</strong> ${document.getElementById('client-phone').value}</p>
+                <h3>Itens do Pedido:</h3>
+                <ul>${cart.map(item => `<li>${item.name} - R$ ${item.price.toFixed(2)}</li>`).join('')}</ul>
+                <p><strong>Total:</strong> R$ ${total.toFixed(2)}</p>
+            `;
+            const printWindow = window.open('', '', 'width=600,height=800');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function sendWhatsApp() {
+            const name = document.getElementById('client-name').value;
+            const address = document.getElementById('client-address').value;
+            const phone = document.getElementById('client-phone').value;
+            const payment = document.getElementById('payment-method').value;
+
+            const message = `*Pedido NATO PIZZA*%0A%0ACliente: ${name}%0AEndereço: ${address}%0ATelefone: ${phone}%0AForma de Pagamento: ${payment}%0A%0A${cart.map(item => `- ${item.name}: R$ ${item.price.toFixed(2)}`).join('%0A')}%0A%0A*Total:* R$ ${total.toFixed(2)}`;
+            window.open(`https://wa.me/5585994530854?text=${message}`, '_blank');
+        }
+    </script>
+</body>
+</html>
