@@ -188,6 +188,7 @@ main {
 }
 
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <header>
@@ -199,11 +200,11 @@ main {
     <button class="menu-button" onclick="toggleMenu()">Ver Cardápio</button>
 
     <div class="menu-container" id="menu-container">
-      <!-- Itens do cardápio inseridos dinamicamente -->
+      <!-- Categorias e itens do cardápio inseridos dinamicamente -->
     </div>
 
     <div class="sacola-container" id="sacola-container">
-      <h3>Sacola</h3>
+      <h3><i class="fas fa-shopping-cart"></i> Sacola</h3>
       <div id="sacola-itens"></div>
       <p id="total-pedido">Total: R$0.00</p>
       <label for="valor-pago">Valor Pago:</label>
@@ -302,24 +303,33 @@ main {
       }
     }
 
-    // Exemplo de itens do cardápio
-    const itensDoCardapio = [
-      { nome: 'Pastel de Carne', preco: 5.00, imagem: 'pastel-carne.jpeg' },
-      { nome: 'Pastel de Queijo', preco: 4.50, imagem: 'Pastel-queijo.jpeg' },
-      { nome: 'Pastel de Frango', preco: 5.50, imagem: 'pastel-frango.jpeg' }
-    ];
+    // Exemplo de itens do cardápio com categorias
+    const categorias = {
+      'Pastéis Tradicionais': [
+        { nome: 'Pastel de Carne', preco: 5.00, imagem: 'pastel-carne.jpeg' },
+        { nome: 'Pastel de Queijo', preco: 4.50, imagem: 'pastel-queijo.jpeg' }
+      ],
+      'Pastéis Especiais': [
+        { nome: 'Pastel de Frango', preco: 5.50, imagem: 'pastel-frango.jpg' }
+      ]
+    };
 
-    itensDoCardapio.forEach(item => {
-      const menuItem = document.createElement('div');
-      menuItem.className = 'menu-item';
-      menuItem.innerHTML = `
-        <img src="${item.imagem}" alt="${item.nome}">
-        <h3>${item.nome}</h3>
-        <p>R$${item.preco.toFixed(2)}</p>
-        <button class="add-button" onclick="adicionarItem('${item.nome}', ${item.preco})">Adicionar</button>
-      `;
-      menuContainer.appendChild(menuItem);
-    });
+    for (const categoria in categorias) {
+      const categoriaDiv = document.createElement('div');
+      categoriaDiv.innerHTML = `<h2>${categoria}</h2>`;
+      categorias[categoria].forEach(item => {
+        const menuItem = document.createElement('div');
+        menuItem.className = 'menu-item';
+        menuItem.innerHTML = `
+          <img src="${item.imagem}" alt="${item.nome}">
+          <h3>${item.nome}</h3>
+          <p>R$${item.preco.toFixed(2)}</p>
+          <button class="add-button" onclick="adicionarItem('${item.nome}', ${item.preco})">Adicionar</button>
+        `;
+        categoriaDiv.appendChild(menuItem);
+      });
+      menuContainer.appendChild(categoriaDiv);
+    }
   </script>
 </body>
 </html>
