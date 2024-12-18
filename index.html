@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Pedidos - Nato Pizza</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+        header {
+            background-color: #e63946;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .order {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestor de Pedidos - Nato Pizza</h1>
+    </header>
+
+    <div class="container">
+        <h2>Pedidos</h2>
+        <div id="orderList"></div>
+        <div class="total" id="totalPrice"></div>
+        <button onclick="printOrders()">Imprimir Pedidos</button>
+        <button onclick="clearOrders()">Limpar Pedidos</button>
+    </div>
+
+    <script>
+        // Carregar pedidos
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const orderList = document.getElementById('orderList');
+            const totalPriceElement = document.getElementById('totalPrice');
+            let total = 0;
+
+            orderList.innerHTML = '';
+            orders.forEach((order, index) => {
+                total += order.price;
+                orderList.innerHTML += `
+                    <div class="order">
+                        <strong>Item:</strong> ${order.name} <br>
+                        <strong>Preço:</strong> R$ ${order.price.toFixed(2)} <br>
+                        <strong>Data/Hora:</strong> ${order.time}
+                    </div>
+                `;
+            });
+
+            totalPriceElement.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+        }
+
+        // Imprimir pedidos
+        function printOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            let content = '<h1>Pedidos - Nato Pizza</h1>';
+            let total = 0;
+
+            orders.forEach((order) => {
+                total += order.price;
+                content += `
+                    <p><strong>Item:</strong> ${order.name} <br>
+                    <strong>Preço:</strong> R$ ${order.price.toFixed(2)} <br>
+                    <strong>Data/Hora:</strong> ${order.time}</p>
+                    <hr>
+                `;
+            });
+
+            content += `<h2>Total: R$ ${total.toFixed(2)}</h2>`;
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(content);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Limpar pedidos
+        function clearOrders() {
+            localStorage.removeItem('orders');
+            loadOrders();
+        }
+
+        // Carregar ao iniciar
+        loadOrders();
+    </script>
+</body>
+</html>
