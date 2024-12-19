@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: #0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container, .register-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-container h1, .register-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-container input, .register-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: #0f0;
+        }
+
+        .login-container button, .register-container button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .login-container button:hover, .register-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .gauge-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+
+        .gauge {
+            width: 200px;
+            height: 200px;
+            border: 10px solid #444;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(#444 0% 25%, #000 25% 75%, #444 75% 100%);
+        }
+
+        .gauge::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: #fff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .needle {
+            width: 2px;
+            height: 100px;
+            background-color: #f00;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            transform: rotate(-45deg);
+            transition: transform 2s ease-in-out;
+        }
+
+        .gauge-numbers {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .gauge-numbers div {
+            position: absolute;
+        }
+
+        .gauge-numbers .empty {
+            top: 75%;
+            left: 10%;
+        }
+
+        .gauge-numbers .half {
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .gauge-numbers .full {
+            top: 75%;
+            right: 10%;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <input type="text" id="login-username" placeholder="Usuário">
+        <input type="password" id="login-password" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+        <button onclick="showRegister()">Cadastrar-se</button>
+    </div>
+
+    <div class="register-container" style="display: none;">
+        <h1>Cadastro</h1>
+        <input type="text" id="register-username" placeholder="Usuário">
+        <input type="password" id="register-password" placeholder="Senha">
+        <button onclick="register()">Cadastrar</button>
+        <button onclick="showLogin()">Voltar</button>
+    </div>
+
+    <div class="gauge-container">
+        <div class="gauge">
+            <div class="needle" id="needle"></div>
+            <div class="gauge-numbers">
+                <div class="empty">E</div>
+                <div class="half">1/2</div>
+                <div class="full">F</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar a tela de cadastro
+        function showRegister() {
+            document.querySelector('.login-container').style.display = 'none';
+            document.querySelector('.register-container').style.display = 'block';
+        }
+
+        // Função para mostrar a tela de login
+        function showLogin() {
+            document.querySelector('.register-container').style.display = 'none';
+            document.querySelector('.login-container').style.display = 'block';
+        }
+
+        // Função para cadastrar um novo usuário
+        function register() {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+
+            if (username && password) {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push({ username, password });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Usuário cadastrado com sucesso!');
+                showLogin();
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
+
+        // Função para realizar o login
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                document.querySelector('.login-container').style.display = 'none';
+                document.querySelector('.gauge-container').style.display = 'flex';
+
+                // Animação do ponteiro
+                const needle = document.getElementById('needle');
+                needle.style.transform = 'rotate(45deg)';
+
+                // Carregar a página de controle de combustível após a animação
+                setTimeout(() => {
+                    window.location.href = 'controle_combustivel.html';
+                }, 2000);
+            } else {
+                alert('Usuário ou senha incorretos!');
+            }
+        }
+    </script>
+</body>
+</html>
