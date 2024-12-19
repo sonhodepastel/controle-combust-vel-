@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro</title>
+    <style>
+        /* Estilo Global */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Container Principal */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 20px 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+/* Cabeçalho */
+h1 {
+    text-align: center;
+    font-size: 28px;
+    color: #007bff;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f4f4f9;
+    padding-bottom: 10px;
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Botões */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+button {
+    width: 48%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.btn-pdf {
+    background-color: #28a745;
+}
+
+.btn-pdf:hover {
+    background-color: #218838;
+}
+
+/* Lista de Transações */
+.expenses-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.expenses-list li {
+    background: #f4f4f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid #ffc107;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.expenses-list li:nth-child(even) {
+    background: #eaeaea;
+}
+
+.expenses-list button {
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.expenses-list button:hover {
+    background-color: #e0a800;
+}
+
+/* Totais */
+.totals {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Indicador de Saúde Financeira */
+.indicator {
+    text-align: center;
+    font-weight: bold;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+    color: white;
+    background-color: #28a745; /* Cor inicial */
+    transition: background-color 0.3s ease;
+}
+
+/* Alertas */
+.alert {
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    display: none;
+    margin-top: 15px;
+}
+
+/* Filtros */
+.date-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.date-filter input {
+    width: 45%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.date-filter input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.date-filter button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.date-filter button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .button-group button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .date-filter input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .date-filter {
+        flex-direction: column;
+    }
+}
+
+    </style>
+    <script>
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        function addTransaction() {
+            const description = document.getElementById('description').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.getElementById('type').value;
+            const date = document.getElementById('date').value;
+
+            if (!description || !amount || !date || amount <= 0) {
+                alert("Preencha todos os campos corretamente!");
+                return;
+            }
+
+            const transaction = { description, amount, type, date };
+            transactions.push(transaction);
+            saveTransactions();
+            updateDisplay();
+            clearForm();
+        }
+
+        function saveTransactions() {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        function updateDisplay() {
+            const expensesList = document.getElementById('expenses-list');
+            expensesList.innerHTML = '';
+            let totalEntrada = 0;
+            let totalSaida = 0;
+
+            transactions.forEach((transaction, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    ${transaction.description} - R$ ${transaction.amount.toFixed(2)} (${transaction.type}) 
+                    <button onclick="editTransaction(${index})">Corrigir</button>
+                `;
+                expensesList.appendChild(li);
+
+                if (transaction.type === 'entrada') {
+                    totalEntrada += transaction.amount;
+                } else {
+                    totalSaida += transaction.amount;
+                }
+            });
+
+            document.getElementById('total-entrada').textContent = totalEntrada.toFixed(2);
+            document.getElementById('total-saida').textContent = totalSaida.toFixed(2);
+            updateIndicator(totalEntrada - totalSaida);
+        }
+
+        function updateIndicator(balance) {
+            const indicator = document.getElementById('indicator');
+            if (balance < 0) {
+                indicator.textContent = 'Saúde Financeira: Em Risco';
+                indicator.style.backgroundColor = 'red';
+            } else if (balance < 100) {
+                indicator.textContent = 'Saúde Financeira: Atenção';
+                indicator.style.backgroundColor = 'yellow';
+            } else {
+                indicator.textContent = 'Saúde Financeira: Saudável';
+                indicator.style.backgroundColor = 'green';
+            }
+        }
+
+        function editTransaction(index) {
+            const transaction = transactions[index];
+            document.getElementById('description').value = transaction.description;
+            document.getElementById('amount').value = transaction.amount;
+            document.getElementById('type').value = transaction.type;
+            document.getElementById('date').value = transaction.date;
+
+            // Remove a transação para reedição
+            transactions.splice(index, 1);
+            saveTransactions();
+            updateDisplay();
+        }
+
+        function clearForm() {
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('type').value = 'entrada';
+            document.getElementById('date').value = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', updateDisplay);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Controle Financeiro</h1>
+        <div class="form-group">
+            <label for="description">Descrição:</label>
+            <input type="text" id="description">
+        </div>
+        <div class="form-group">
+            <label for="amount">Valor (R$):</label>
+            <input type="number" id="amount">
+        </div>
+        <div class="form-group">
+            <label for="type">Tipo:</label>
+            <select id="type">
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date">Data:</label>
+            <input type="date" id="date">
+        </div>
+        <div class="button-group">
+            <button onclick="addTransaction()">Adicionar Transação</button>
+        </div>
+        <ul class="expenses-list" id="expenses-list"></ul>
+        <div class="totals">
+            <div>Total de Entradas: R$ <span id="total-entrada">0.00</span></div>
+            <div>Total de Saídas: R$ <span id="total-saida">0.00</span></div>
+        </div>
+        <div class="indicator" id="indicator">Saúde Financeira: Saudável</div>
+    </div>
+</body>
+</html>
