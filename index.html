@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <link rel="icon" href="bomba.ico" type="image/x-icon">
-    <!-- Outros elementos do head -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#007BFF">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
     <title>Login</title>
     <style>
         body {
@@ -57,7 +51,7 @@
             background-color: #0056b3;
         }
 
-        .gauge-container {
+        .loading-container {
             display: none;
             justify-content: center;
             align-items: center;
@@ -65,66 +59,18 @@
             background-color: #000;
         }
 
-        .gauge {
-            width: 200px;
-            height: 200px;
-            border: 10px solid #444;
+        .loading {
+            border: 16px solid #f3f3f3;
             border-radius: 50%;
-            position: relative;
-            background: conic-gradient(#444 0% 25%, #000 25% 75%, #444 75% 100%);
+            border-top: 16px solid #007BFF;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
         }
 
-        .gauge::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 10px;
-            background-color: #fff;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .needle {
-            width: 2px;
-            height: 100px;
-            background-color: #f00;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform-origin: bottom;
-            transform: rotate(-45deg);
-            transition: transform 2s ease-in-out;
-        }
-
-        .gauge-numbers {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .gauge-numbers div {
-            position: absolute;
-        }
-
-        .gauge-numbers .empty {
-            top: 75%;
-            left: 10%;
-        }
-
-        .gauge-numbers .half {
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .gauge-numbers .full {
-            top: 75%;
-            right: 10%;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -145,15 +91,8 @@
         <button onclick="showLogin()">Voltar</button>
     </div>
 
-    <div class="gauge-container">
-        <div class="gauge">
-            <div class="needle" id="needle"></div>
-            <div class="gauge-numbers">
-                <div class="empty">E</div>
-                <div class="half">1/2</div>
-                <div class="full">F</div>
-            </div>
-        </div>
+    <div class="loading-container">
+        <div class="loading"></div>
     </div>
 
     <script>
@@ -195,13 +134,9 @@
 
             if (user) {
                 document.querySelector('.login-container').style.display = 'none';
-                document.querySelector('.gauge-container').style.display = 'flex';
+                document.querySelector('.loading-container').style.display = 'flex';
 
-                // Animação do ponteiro
-                const needle = document.getElementById('needle');
-                needle.style.transform = 'rotate(45deg)';
-
-                // Carregar a página de controle de combustível após a animação
+                // Simulação de carregamento
                 setTimeout(() => {
                     window.location.href = 'controle_combustivel.html';
                 }, 2000);
@@ -209,16 +144,6 @@
                 alert('Usuário ou senha incorretos!');
             }
         }
-        //  cria o servidor
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(registration => {
-                console.log('Service Worker registrado com sucesso:', registration);
-            }).catch(error => {
-                console.log('Falha ao registrar o Service Worker:', error);
-            });
-        });
-    }
     </script>
 </body>
 </html>
