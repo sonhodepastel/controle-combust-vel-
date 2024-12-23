@@ -1,7 +1,7 @@
 {
   "name": "Controle de Combustível",
   "short_name": "Combustível",
-  "start_url": "index.html",
+  "start_url": "admin.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#007BFF",
