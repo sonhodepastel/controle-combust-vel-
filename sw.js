@@ -3,8 +3,7 @@ self.addEventListener('install', event => {
         caches.open('v1').then(cache => {
             return cache.addAll([
                 '/',
-                '/index.html',
-                '/controle_combustivel.html',
+                '/admin.html',
                 '/style.css',
                 '/script.js',
                 '/manifest.json',
