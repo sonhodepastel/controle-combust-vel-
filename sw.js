@@ -4,8 +4,8 @@ self.addEventListener('install', event => {
       return cache.addAll([
         '/admin.html',
         '/manifest.json',
-        '/icon-192x192.png',
-        '/icon-512x512.png',
+        '/favico.png',
+        '/log.png',
         // Adicione outros arquivos que você deseja armazenar em cache
       ]);
     })
