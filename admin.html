@@ -1,0 +1,238 @@
+<DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Editar Cardápio</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group button {
+            background-color: #ff0000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #cc0000;
+        }
+        .form-group img {
+            max-width: 100px;
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-2xl font-bold mb-4">Painel Administrativo - Editar Cardápio</h1>
+        <a href="index.html" class="text-blue-600 underline mb-4 inline-block">Visualizar Cardápio</a>
+        <div class="form-group">
+            <label for="item-category">Categoria do Item</label>
+            <select id="item-category">
+                <option value="burgers">Burgers</option>
+                <option value="pizzas">Pizzas</option>
+                <option value="bebidas">Bebidas</option>
+                <option value="sobremesas">Sobremesas</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="item-name">Nome do Item</label>
+            <input type="text" id="item-name" placeholder="Nome do item">
+        </div>
+        <div class="form-group">
+            <label for="item-description">Descrição do Item</label>
+            <textarea id="item-description" rows="4" placeholder="Descrição do item"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="item-price">Preço do Item</label>
+            <input type="number" id="item-price" placeholder="Preço do item">
+        </div>
+        <div class="form-group">
+            <label for="item-image">Imagem do Item</label>
+            <input type="file" id="item-image" accept="image/*">
+            <img id="preview-image" src="" alt="Pré-visualização da imagem" class="hidden">
+        </div>
+        <div class="form-group">
+            <button id="add-item">Adicionar Item</button>
+            <button id="update-item" class="hidden">Atualizar Item</button>
+        </div>
+        <h2 class="text-xl font-bold mb-4">Itens do Cardápio</h2>
+        <ul id="menu-items"></ul>
+        <div class="form-group">
+            <label for="new-category">Nova Categoria</label>
+            <input type="text" id="new-category" placeholder="Nome da nova categoria">
+            <button id="add-category">Adicionar Categoria</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const itemCategory = document.getElementById('item-category');
+            const itemName = document.getElementById('item-name');
+            const itemDescription = document.getElementById('item-description');
+            const itemPrice = document.getElementById('item-price');
+            const itemImage = document.getElementById('item-image');
+            const previewImage = document.getElementById('preview-image');
+            const addItemButton = document.getElementById('add-item');
+            const updateItemButton = document.getElementById('update-item');
+            const menuItemsList = document.getElementById('menu-items');
+            const newCategoryInput = document.getElementById('new-category');
+            const addCategoryButton = document.getElementById('add-category');
+            let editingIndex = null;
+
+            // Carregar itens do cardápio do localStorage
+            const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+            const categories = JSON.parse(localStorage.getItem('categories')) || ['burgers', 'pizzas', 'bebidas', 'sobremesas'];
+
+            function renderMenuItems() {
+                menuItemsList.innerHTML = '';
+                menuItems.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-2 p-2 bg-gray-100 rounded';
+                    li.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover inline-block mr-2">
+                        <strong>${item.name}</strong> - ${item.description} - R$${item.price.toFixed(2)}
+                        <button onclick="editItem(${index})" class="ml-2 text-blue-600">Editar</button>
+                        <button onclick="removeItem(${index})" class="ml-2 text-red-600">Remover</button>
+                    `;
+                    menuItemsList.appendChild(li);
+                });
+            }
+
+            function renderCategories() {
+                itemCategory.innerHTML = '';
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                    itemCategory.appendChild(option);
+                });
+            }
+
+            function addItem() {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const newItem = {
+                        category: itemCategory.value,
+                        name: itemName.value,
+                        description: itemDescription.value,
+                        price: parseFloat(itemPrice.value),
+                        image: event.target.result
+                    };
+                    menuItems.push(newItem);
+                    localStorage.setItem('menuItems', JSON.stringify(menuItems));
+                    renderMenuItems();
+                    clearForm();
+                };
+                reader.readAsDataURL(itemImage.files[0]);
+            }
+
+            function updateItem() {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    menuItems[editingIndex] = {
+                        category: itemCategory.value,
+                        name: itemName.value,
+                        description: itemDescription.value,
+                        price: parseFloat(itemPrice.value),
+                        image: event.target.result
+                    };
+                    localStorage.setItem('menuItems', JSON.stringify(menuItems));
+                    renderMenuItems();
+                    clearForm();
+                };
+                reader.readAsDataURL(itemImage.files[0]);
+            }
+
+            window.editItem = function(index) {
+                editingIndex = index;
+                const item = menuItems[index];
+                itemCategory.value = item.category;
+                itemName.value = item.name;
+                itemDescription.value = item.description;
+                itemPrice.value = item.price;
+                previewImage.src = item.image;
+                previewImage.classList.remove('hidden');
+                addItemButton.classList.add('hidden');
+                updateItemButton.classList.remove('hidden');
+            }
+
+            window.removeItem = function(index) {
+                menuItems.splice(index, 1);
+                localStorage.setItem('menuItems', JSON.stringify(menuItems));
+                renderMenuItems();
+            }
+
+            function clearForm() {
+                itemCategory.value = categories[0];
+                itemName.value = '';
+                itemDescription.value = '';
+                itemPrice.value = '';
+                itemImage.value = '';
+                previewImage.src = '';
+                previewImage.classList.add('hidden');
+                addItemButton.classList.remove('hidden');
+                updateItemButton.classList.add('hidden');
+                editingIndex = null;
+            }
+
+            function addCategory() {
+                const newCategory = newCategoryInput.value.trim().toLowerCase();
+                if (newCategory && !categories.includes(newCategory)) {
+                    categories.push(newCategory);
+                    localStorage.setItem('categories', JSON.stringify(categories));
+                    renderCategories();
+                    newCategoryInput.value = '';
+                }
+            }
+
+            itemImage.addEventListener('change', function() {
+                const file = itemImage.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        previewImage.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            addItemButton.addEventListener('click', addItem);
+            updateItemButton.addEventListener('click', updateItem);
+                      addCategoryButton.addEventListener('click', addCategory);
+            renderMenuItems();
+            renderCategories();
+        });
+    </script>
+</body>
+</html>
