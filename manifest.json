@@ -1,6 +1,6 @@
 {
-  "name": "Controle de Combustível",
-  "short_name": "Combustível",
+  "name": "Painel Administrativo",
+  "short_name": "Cardápio",
   "start_url": "admin.html",
   "display": "standalone",
   "background_color": "#000000",
