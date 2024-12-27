@@ -1,0 +1,120 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #f4f4f4, #d4edda);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transform: perspective(1000px) rotateY(0deg);
+    transition: transform 0.3s;
+}
+
+.container:hover {
+    transform: perspective(1000px) rotateY(10deg);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, select, button {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input, select {
+    background-color: #f9f9f9;
+}
+
+button {
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+#transaction-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#transaction-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+#transaction-list li.receita {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+#transaction-list li.despesa {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+#transaction-list li.despesa.overdue {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+#alert {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+button.pay {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button.pay:hover {
+    background-color: #0056b3;
+}
