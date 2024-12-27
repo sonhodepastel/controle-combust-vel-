@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (transaction.category === 'despesa' && new Date(transaction.dueDate) < new Date()) {
             li.classList.add('overdue');
         }
-        li.innerHTML = `${transaction.description} - R$${transaction.amount.toFixed(2)} - ${transaction.dueDate} <button onclick="payTransaction('${transaction.description}')">Pagar</button>`;
+        li.innerHTML = `${transaction.description} - R$${transaction.amount.toFixed(2)} - ${transaction.dueDate} <button class="pay" onclick="payTransaction('${transaction.description}')">Pagar</button>`;
         transactionList.appendChild(li);
     }
 
@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const overdueTransactions = transactions.filter(t => t.category === 'despesa' && new Date(t.dueDate) < new Date());
         if (overdueTransactions.length > 0) {
             alert.classList.remove('hidden');
-            sendPushNotification();
+            sendBrowserNotification();
         } else {
             alert.classList.add('hidden');
         }
     }
 
-    function sendPushNotification() {
+    function sendBrowserNotification() {
         if (Notification.permission === 'granted') {
             new Notification('Você tem contas atrasadas!');
         } else if (Notification.permission !== 'denied') {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         transactions.forEach(transaction => {
             if (transaction.category === 'despesa' && new Date(transaction.dueDate) < new Date()) {
-                sendPushNotification();
+                sendBrowserNotification();
             }
         });
     }, 60000); // Verifica a cada minuto
