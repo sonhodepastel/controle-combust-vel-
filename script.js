@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addTransactionToDOM(transaction);
         form.reset();
         checkForAlerts();
-        sendBrowserNotification(`Nova ${category}`, `Descrição: ${description}, Valor: R$${amount.toFixed(2)}`);
+        sendPushNotification(`Nova ${category}`, `Descrição: ${description}, Valor: R$${amount.toFixed(2)}`);
     });
 
     function addTransactionToDOM(transaction) {
@@ -37,13 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const overdueTransactions = transactions.filter(t => t.category === 'despesa' && new Date(t.dueDate) < new Date());
         if (overdueTransactions.length > 0) {
             alert.classList.remove('hidden');
-            sendBrowserNotification('Contas atrasadas!', 'Você tem contas atrasadas!');
+            sendPushNotification('Contas atrasadas!', 'Você tem contas atrasadas!');
         } else {
             alert.classList.add('hidden');
         }
     }
 
-    function sendBrowserNotification(title, body) {
+    function sendPushNotification(title, body) {
         if (Notification.permission === 'granted') {
             new Notification(title, { body });
             notificationSound.play();
