@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Finanças Pessoais</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Adicione aqui seus estilos CSS */
+    </style>
 </head>
 <body>
     <div class="container">
@@ -39,25 +39,5 @@
             </select>
         </div>
     </div>
-    <script src="script.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(registration => {
-                    console.log('Service Worker de cache registrado com sucesso:', registration);
-                })
-                .catch(error => {
-                    console.log('Falha ao registrar o Service Worker de cache:', error);
-                });
-
-            navigator.serviceWorker.register('/notification-worker.js')
-                .then(registration => {
-                    console.log('Service Worker de notificações registrado com sucesso:', registration);
-                })
-                .catch(error => {
-                    console.log('Falha ao registrar o Service Worker de notificações:', error);
-                });
-        }
-    </script>
 </body>
 </html>
