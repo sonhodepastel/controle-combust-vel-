@@ -128,7 +128,6 @@ button.pay:hover {
     margin-top: 10px;
 }
 
-/* Adicione ao seu arquivo styles.css */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
