@@ -22,7 +22,7 @@ body {
 }
 
 .container:hover {
-    transform: perspective(1000px) rotateY(10deg);
+    transform: perspective(1000px) rotateY(0deg);
 }
 
 h1 {
