@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonho de Pastel - Cardápio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ff0000;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .item {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .item h3 {
+            color: #ff0000;
+        }
+        .item p {
+            color: #000;
+        }
+        .item button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .item button:hover {
+            background-color: #cc0000;
+        }
+        .cart {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 300px;
+            display: none;
+        }
+        .cart h3 {
+            color: #ff0000;
+        }
+        .cart button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .cart button:hover {
+            background-color: #cc0000;
+        }
+        .cart .finalize {
+            background-color: #000;
+        }
+        .cart .finalize:hover {
+            background-color: #333;
+        }
+        .cart .copy-key {
+            background-color: #ffcc00;
+            color: #000;
+        }
+        .cart .copy-key:hover {
+            background-color: #e6b800;
+        }
+        .cart-toggle {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+        }
+        .cart-toggle:hover {
+            background-color: #cc0000;
+        }
+        @media (max-width: 600px) {
+            .item {
+                width: 100%;
+            }
+            .cart {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sonho de Pastel - Cardápio</h1>
+    </header>
+    <div class="menu">
+        <div class="item">
+            <img src="https://via.placeholder.com/200" alt="Pastel de Carne">
+            <h3>Pastel de Carne</h3>
+            <p>Delicioso pastel recheado com carne moída.</p>
+            <p>R$ 5,00</p>
+            <button onclick="addToCart('Pastel de Carne', 5.00)">Pedir</button>
+        </div>
+        <div class="item">
+            <img src="https://via.placeholder.com/200" alt="Pastel de Queijo">
+            <h3>Pastel de Queijo</h3>
+            <p>Pastel recheado com queijo derretido.</p>
+            <p>R$ 4,50</p>
+            <button onclick="addToCart('Pastel de Queijo', 4.50)">Pedir</button>
+        </div>
+        <!-- Adicione mais itens conforme necessário -->
+    </div>
+    <button class="cart-toggle" onclick="toggleCart()">Carrinho</button>
+    <div class="cart" id="cart">
+        <h3>Carrinho</h3>
+        <ul id="cart-items"></ul>
+        <p>Total: R$ <span id="total-price">0.00</span></p>
+        <button class="finalize" onclick="finalizeOrder()">Finalizar Pedido</button>
+    </div>
+    <script>
+        let cart = [];
+        let totalPrice = 0;
+
+        function addToCart(item, price) {
+            cart.push({ item, price });
+            totalPrice += price;
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            cart.forEach((cartItem, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${cartItem.item} - R$ ${cartItem.price.toFixed(2)}`;
+                cartItems.appendChild(li);
+            });
+            document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+        }
+
+        function toggleCart() {
+            const cart = document.getElementById('cart');
+            if (cart.style.display === 'none' || cart.style.display === '') {
+                cart.style.display = 'block';
+            } else {
+                cart.style.display = 'none';
+            }
+        }
+
+        function finalizeOrder() {
+            const name = prompt('Digite seu nome:');
+            const address = prompt('Digite seu endereço:');
+            const paymentMethod = prompt('Forma de pagamento (PIX ou Dinheiro):');
+            let paymentInfo = '';
+
+            if (paymentMethod.toLowerCase() === 'pix') {
+                paymentInfo = 'Chave PIX: 071.315.084-03';
+            } else if (paymentMethod.toLowerCase() === 'dinheiro') {
+                const change = prompt('Precisa de troco? (Sim ou Não)');
+                paymentInfo = change.toLowerCase() === 'sim' ? 'Precisa de troco.' : 'Não precisa de troco.';
+            }
+
+            const orderNumber = Math.floor(Math.random() * 1000000);
+            const orderDetails = `
+                Pedido Número: ${orderNumber}
+                Nome: ${name}
+                Endereço: ${address}
+                Itens: ${cart.map(cartItem => `${cartItem.item} - R$ ${cartItem.price.toFixed(2)}`).join(', ')}
+                Total: R$ ${totalPrice.toFixed(2)}
+                Forma de pagamento: ${paymentMethod}
+                ${paymentInfo}
+            `;
+
+            alert('Pedido enviado para o WhatsApp!');
+            window.open(`https://wa.me/5585994530854?text=${encodeURIComponent(orderDetails)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
