@@ -257,27 +257,27 @@
         });
     }
 
-    let deferredPrompt;
-    const installButton = document.getElementById('installButton');
+    let deferredPrompt;  // Certifique-se de que esta variável é declarada apenas uma vez
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        const installButton = document.getElementById('installButton');
         installButton.style.display = 'block';
-    });
 
-    installButton.addEventListener('click', () => {
-        installButton.style.display = 'none';
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('Usuário aceitou a instalação do PWA');
-            } else {
-                console.log('Usuário dispensou a instalação do PWA');
-            }
-            deferredPrompt = null;
+        installButton.addEventListener('click', () => {
+            installButton.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('Usuário aceitou a instalação do PWA');
+                } else {
+                    console.log('Usuário dispensou a instalação do PWA');
+                }
+                deferredPrompt = null;
+            });
         });
     });
-    </script>
+</script>
 </body>
 </html>
