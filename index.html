@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Entrega</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .hidden {
+            display: none;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .icon-button {
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+        #installButton {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Controle de Entrega</h2>
+        <div class="form-group">
+            <label for="cliente">Nome do Cliente:</label>
+            <input type="text" id="cliente">
+        </div>
+        <div class="form-group">
+            <label for="endereco">Endereço Completo:</label>
+            <input type="text" id="endereco">
+        </div>
+        <div class="form-group">
+            <label for="codigo">Código de Entrega:</label>
+            <input type="text" id="codigo">
+        </div>
+        <div class="buttons-container">
+            <button onclick="adicionarEntrega()">Adicionar Entrega</button>
+            <button onclick="exportarCSV()">Exportar CSV</button>
+        </div>
+        <div class="form-group search-container">
+            <label for="filtro">Buscar por Cliente ou Endereço:</label>
+            <input type="text" id="filtro">
+            <button onclick="filtrarEntregas()">🔍</button>
+        </div>
+        <table id="tabelaEntregas">
+            <thead>
+                <tr>
+                    <th>Nome do Cliente</th>
+                    <th>Endereço Completo</th>
+                    <th>Código de Entrega</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="alerta" class="hidden">Por favor, preencha todos os campos antes de adicionar uma entrega.</div>
+        <button id="installButton">Instalar Aplicativo</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
