@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento de Celular</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">Painel de Monitoramento</h1>
+        <div id="painel" class="bg-light p-4 rounded shadow-sm">
+            <p>Localização: <span id="localizacao"></span></p>
+            <p>Nível de Bateria: <span id="bateria"></span></p>
+            <p>Rua: <span id="rua"></span></p>
+            <button id="mover-mapa" class="btn btn-primary mt-3"><i class="fas fa-location-arrow"></i> Mover Mapa para Minha Localização</button>
+        </div>
+        <div id="map" class="my-4" style="height: 400px; width: 100%;"></div>
+        <div id="filtro-historico" class="bg-light p-4 rounded shadow-sm">
+            <h2>Filtro de Histórico</h2>
+            <input type="date" id="data-inicio" class="form-control mb-2">
+            <input type="date" id="data-fim" class="form-control mb-2">
+            <button id="filtrar-historico" class="btn btn-primary">Filtrar Histórico</button>
+        </div>
+        <div id="historico" class="bg-light p-4 rounded shadow-sm mt-4" style="display: none;">
+            <h2>Histórico de Localização</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Data e Hora</th>
+                        <th>Localização</th>
+                        <th>Rua</th>
+                    </tr>
+                </thead>
+                <tbody id="historico-tabela">
+                    <!-- Linhas de histórico serão adicionadas aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/service-worker.js").then(() => {
+                    console.log("Service Worker registrado com sucesso.");
+                }).catch(err => {
+                    console.log("Falha ao registrar o Service Worker: ", err);
+                });
+            });
+        }
+    </script>
+    <script src="scripts.js"></script>
+</body>
+</html>
