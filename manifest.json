@@ -12,7 +12,7 @@
             "sizes": "192x192"
         },
         {
-            "src": "icons/icon-512x512.mp4",
+            "src": "icons/icon-512x512.png",
             "type": "image/png",
             "sizes": "512x512"
         }
