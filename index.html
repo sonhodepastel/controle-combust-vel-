@@ -44,12 +44,40 @@
     </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/service-worker.js").then(() => {
-                    console.log("Service Worker registrado com sucesso.");
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').then(() => {
+                    console.log('Service Worker registrado com sucesso.');
                 }).catch(err => {
-                    console.log("Falha ao registrar o Service Worker: ", err);
+                    console.log('Falha ao registrar o Service Worker: ', err);
+                });
+            });
+        }
+
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            const addBtn = document.createElement('button');
+            addBtn.textContent = 'Instalar Aplicativo';
+            addBtn.classList.add('btn', 'btn-success');
+            document.body.appendChild(addBtn);
+
+            addBtn.addEventListener('click', (e) => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Usuário aceitou a instalação');
+                    } else {
+                        console.log('Usuário descartou a instalação');
+                    }
+                    deferredPrompt = null;
+                    addBtn.style.display = 'none';
                 });
             });
         }
