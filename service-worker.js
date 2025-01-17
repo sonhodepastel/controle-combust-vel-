@@ -4,6 +4,8 @@ const urlsToCache = [
     "/index.html",
     "/styles.css",
     "/scripts.js",
+    "/icon-192x192.png",
+    "/icon-512x512.png",
     "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css",
     "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css",
     "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js",
